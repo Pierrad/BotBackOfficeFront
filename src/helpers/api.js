@@ -1,6 +1,6 @@
 const api = import.meta.env.VITE_API_URL
 
-function getCookie(name) {
+export const getCookie = (name) => {
   const value = `; ${document.cookie}`
   const parts = value.split(`; ${name}=`)
   if (parts.length === 2) return parts.pop().split(';').shift()
@@ -16,7 +16,7 @@ export const callAPI = async (url, method, body) => {
     method: method,
     headers: {
       "Content-Type": "application/json",
-      "Authorization": authCookie ? `Bearer ${authCookie}` : ''
+      "Authorization": authCookie ? `${authCookie}` : ''
     },
     body: JSON.stringify(body),
   })
@@ -30,7 +30,7 @@ export const callAPI = async (url, method, body) => {
       } else {
         const { token, expiration } = data.data.user.token
         setCookie('authToken', token, expiration)
-        return data.data
+        return data
       }
     })
     .catch((error) => {

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { canUserAccess } from '../services/User'
 import HomeView from '../views/Home.vue'
 
 const router = createRouter({
@@ -23,6 +24,15 @@ const router = createRouter({
       component: () => import('../views/Dashboard.vue')
     }
   ]
+})
+
+router.beforeEach(async (to) => {
+  if (to.name !== 'home') {
+    const canAccess = await canUserAccess()
+    if (!canAccess) {
+      return '/'
+    }
+  }
 })
 
 export default router

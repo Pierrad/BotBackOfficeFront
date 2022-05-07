@@ -28,8 +28,10 @@ export const callAPI = async (url, method, body) => {
         alert(data.data.message)
         throw new Error('API call failed')
       } else {
-        const { token, expiration } = data.data.user.token
-        setCookie('authToken', token, expiration)
+        if (data.data.user) {
+          const { token, expiration } = data.data.user.token
+          setCookie('authToken', token, expiration)
+        }
         return data
       }
     })

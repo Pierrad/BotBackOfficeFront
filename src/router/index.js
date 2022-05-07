@@ -22,6 +22,11 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('../views/Dashboard.vue')
+    },
+    {
+      path: '/bot/:id',
+      name: 'bot',
+      component: () => import('../views/Bot.vue')
     }
   ]
 })

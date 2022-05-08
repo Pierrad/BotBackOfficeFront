@@ -2,6 +2,7 @@
 defineProps({
   modelValue: String,
   placeholder: String,
+  childclass: String,
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -13,7 +14,7 @@ const updateInput = (event) => {
 </script>
 
 <template>
-  <input :value="modelValue" :placeholder="placeholder" @input="updateInput" />
+  <input :value="modelValue" :placeholder="placeholder" @input="updateInput" :class="childclass" />
 </template>
 
 <style scoped>
@@ -21,7 +22,7 @@ const updateInput = (event) => {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #ccc;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     outline: none;
   }
 </style>

@@ -2,12 +2,13 @@
 
 defineProps({
   onclick: Function,
+  childclass: String,
 })
 
 </script>
 
 <template>
-  <button @click="onclick">
+  <button @click="onclick" :class="childclass">
     <slot>Button</slot>
   </button>
 </template>

@@ -4,6 +4,7 @@ import Router from "../router/index"
 import ActionButton from '../components/ActionButton.vue'
 import Edit from '../components/icons/Edit.vue'
 import Trash from '../components/icons/Trash.vue'
+import Add from "../components/icons/Add.vue"
 import { getBots } from '../services/Bot' 
 
 let bots = ref([])
@@ -39,21 +40,25 @@ const editBot = (bot) => {
         </div>
       </div>
     </div>
+    <div class="addBox">
+      <ActionButton @click="addBot" :childclass="'addButton'">
+        <Add />
+        Ajouter un bot
+      </ActionButton>
+    </div>
+    
   </div>
 </template>
 
 <style scoped>
 h1 {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .bots {
   display: flex;
   flex-direction: column;
-}
-
-.bots:last-child {
-  border-bottom: 1px solid #ccc;
+  margin-bottom: 1rem;
 }
 
 .bot {
@@ -63,6 +68,10 @@ h1 {
   border-top: 1px solid #ccc;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
+}
+
+.bot:last-child {
+  border-bottom: 1px solid #ccc;
 }
 
 .actions {
@@ -85,6 +94,23 @@ button {
 .deleteButton {
   background-color: #fc4848;
   margin-left: 0.5rem;
+}
+
+.addBox {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  padding: 0.5rem;
+  background-color: #4842fe;
+  width: max-content;
+  color: white;
+  border-radius: 0.2rem;
 }
 
 

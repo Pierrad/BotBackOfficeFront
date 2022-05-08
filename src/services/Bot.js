@@ -22,3 +22,14 @@ export const getOneBot = async (id) => {
     })
   }
 }
+
+export const editEntries = async (id, entries) => {
+  const authCookie = getCookie("authToken")
+  if (authCookie) {
+    return await callAPI(`/bot/edit/entries`, "POST", { botID: id, entries }).then((data) => {
+      if (data.success === true) {
+        return true
+      }
+    })
+  }
+}

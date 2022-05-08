@@ -7,6 +7,7 @@ import Input from "../components/Input.vue"
 import VueTagsInput from "@sipec/vue3-tags-input"
 import ArrowLeft from "../components/icons/ArrowLeft.vue"
 import Edit from "../components/icons/Edit.vue"
+import Trash from "../components/icons/Trash.vue"
 import Add from "../components/icons/Add.vue"
 import Modal from "../components/Modal.vue"
 
@@ -17,7 +18,9 @@ if (!id) {
 }
 
 const bot = ref({})
-const isModalVisible = ref(false)
+const isEditModalVisible = ref(false)
+const isDeleteModalVisible = ref(false)
+const selectedEntry = ref(null)
 const emojiInModal = ref('')
 const wordsInModal = ref([])
 const tag = ref('')
@@ -31,11 +34,12 @@ const back = () => {
 }
 
 const closeModal = () => {
-  isModalVisible.value = false
+  isEditModalVisible.value = false
+  isDeleteModalVisible.value = false
 }
 
-const openModal = (entry) => {
-  isModalVisible.value = true
+const openEditModal = (entry) => {
+  isEditModalVisible.value = true
   if (entry) {
     emojiInModal.value = entry.emoji
     wordsInModal.value = entry.words
@@ -43,6 +47,11 @@ const openModal = (entry) => {
     emojiInModal.value = ''
     wordsInModal.value = []
   }
+}
+
+const openDeleteModal = (entry) => {
+  isDeleteModalVisible.value = true
+  selectedEntry.value = entry
 }
 
 const editEntry = () => {
@@ -61,6 +70,13 @@ const editEntry = () => {
   }
 
   editEntries(id, JSON.parse(JSON.stringify(bot.value.entries)))
+}
+
+const deleteEntry = () => {
+  bot.value.entries = bot.value.entries.filter(entry => entry.emoji !== selectedEntry.value.emoji)
+  editEntries(id, JSON.parse(JSON.stringify(bot.value.entries)))
+  isDeleteModalVisible.value = false
+  selectedEntry.value = null
 }
 
 onMounted(() => {
@@ -86,20 +102,25 @@ onMounted(() => {
             {{ word }}
           </div>
         </div>
-        <ActionButton @click="openModal(entry)" :childclass="'editWordsButton'">
-          <Edit />
-        </ActionButton>
+        <div class="actions">
+          <ActionButton @click="openEditModal(entry)" :childclass="'editWordsButton'">
+            <Edit />
+          </ActionButton>
+          <ActionButton @click="openDeleteModal(entry)" :childclass="'deleteEntryButton'">
+            <Trash />
+          </ActionButton>
+        </div>
       </div>
     </div>
     <div class="addBox">
-      <ActionButton @click="openModal" :childclass="'addEntryButton'">
+      <ActionButton @click="openEditModal" :childclass="'addEntryButton'">
         <Add />
         Ajouter une entrée
       </ActionButton>
     </div>
 
     <Modal
-      v-show="isModalVisible"
+      v-show="isEditModalVisible"
       @close="closeModal"
     >
       <template v-slot:header>
@@ -121,6 +142,22 @@ onMounted(() => {
             />
           </div>
           <ActionButton @click="editEntry">Enregistrer</ActionButton>
+        </div>
+      </template>
+    </Modal>
+
+    <Modal
+      v-show="isDeleteModalVisible"
+      @close="closeModal"
+    >
+      <template v-slot:header>
+        <h3>Supprimer cette entrée ?</h3>
+      </template>
+
+      <template v-slot:body>
+        <div class="deleteModalActions">
+          <ActionButton @click="closeModal">Annuler</ActionButton>
+          <ActionButton @click="deleteEntry">Supprimer</ActionButton>
         </div>
       </template>
     </Modal>
@@ -189,6 +226,22 @@ onMounted(() => {
     padding: 0.5rem;
     background-color: #4842fe;
     width: 4rem;
+    margin-right: 0.5rem;
+  }
+
+  .deleteEntryButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    padding: 0.5rem;
+    background-color: #fc4848;
+    width: 4rem;
+    margin-left: 0.5rem;
+  }
+
+  .actions {
+    display: flex;
   }
 
   .addBox {
@@ -223,5 +276,11 @@ onMounted(() => {
   .ti-input {
     border-radius: 0.5rem;
     padding: 0.5rem !important;
+  }
+
+  .deleteModalActions {
+    display: flex;
+    justify-content: space-between;
+    width: 20rem;
   }
 </style>

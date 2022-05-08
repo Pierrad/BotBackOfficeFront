@@ -1,4 +1,4 @@
-# front
+# Front
 
 ## Project Setup
 
@@ -6,20 +6,19 @@
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+## Compile and Hot-Reload for Development
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+## Compile and Minify for Production
 
 ```sh
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
 
-```sh
-npm run lint
-```
+## Notes
+
+- Backend of the project : https://github.com/Pierrad/BotBackOfficeBack

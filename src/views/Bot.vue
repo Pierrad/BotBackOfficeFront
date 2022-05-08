@@ -157,7 +157,7 @@ onMounted(() => {
       <template v-slot:body>
         <div class="deleteModalActions">
           <ActionButton @click="closeModal">Annuler</ActionButton>
-          <ActionButton @click="deleteEntry">Supprimer</ActionButton>
+          <ActionButton @click="deleteEntry" :childclass="'deleteEntryValidationButton'">Supprimer</ActionButton>
         </div>
       </template>
     </Modal>
@@ -282,5 +282,12 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     width: 20rem;
+  }
+
+  .deleteEntryValidationButton {
+    background-color: #fc4848;
+    color: white;
+    border: none;
+    font-weight: bold;
   }
 </style>

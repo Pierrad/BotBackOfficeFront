@@ -2,12 +2,18 @@
 import { onMounted, ref } from 'vue'
 import Router from "../router/index"
 import ActionButton from '../components/ActionButton.vue'
+import Modal from '../components/Modal.vue'
+import Input from '../components/Input.vue'
 import Edit from '../components/icons/Edit.vue'
 import Trash from '../components/icons/Trash.vue'
 import Add from "../components/icons/Add.vue"
-import { getBots } from '../services/Bot' 
+import { getBots, addBot, deleteBot } from '../services/Bot' 
 
-let bots = ref([])
+const bots = ref([])
+const isAddModalVisible = ref(false)
+const isDeleteModalVisible = ref(false)
+const selectedBot = ref(null)
+const newBotName = ref('')
 
 const fetchBots = async () => {
   bots.value = await getBots()
@@ -19,6 +25,29 @@ onMounted(() => {
 
 const editBot = (bot) => {
   Router.push(`/bot/${bot._id}`)
+}
+
+
+const openAddModal = () => {
+  isAddModalVisible.value = true
+}
+
+const openDeleteModal = (bot) => {
+  isDeleteModalVisible.value = true
+  selectedBot.value = bot
+}
+
+const closeModal = () => {
+  isAddModalVisible.value = false
+  isDeleteModalVisible.value = false
+}
+
+const handleAddBot = () => {
+  addBot(newBotName.value)
+}
+
+const handleDeletebot = () => {
+  deleteBot(selectedBot.value._id)
 }
 
 </script>
@@ -34,19 +63,50 @@ const editBot = (bot) => {
           <ActionButton class="editButton" @click="editBot(bot)">
             <Edit />
           </ActionButton>
-          <ActionButton class="deleteButton" @click="deleteBot(bot)">
+          <ActionButton class="deleteButton" @click="openDeleteModal(bot)">
             <Trash />
           </ActionButton>
         </div>
       </div>
     </div>
     <div class="addBox">
-      <ActionButton @click="addBot" :childclass="'addButton'">
+      <ActionButton @click="openAddModal" :childclass="'addButton'">
         <Add />
         Ajouter un bot
       </ActionButton>
     </div>
-    
+
+    <Modal
+      v-show="isAddModalVisible"
+      @close="closeModal"
+    >
+      <template v-slot:header>
+        <h3>Ajouter un bot</h3>
+      </template>
+
+      <template v-slot:body>
+        <div class="form">
+          <Input v-model="newBotName" />
+          <ActionButton @click="handleAddBot">Ajouter</ActionButton>
+        </div>
+      </template>
+    </Modal>
+
+    <Modal
+      v-show="isDeleteModalVisible"
+      @close="closeModal"
+    >
+      <template v-slot:header>
+        <h3>Supprimer ce bot ?</h3>
+      </template>
+
+      <template v-slot:body>
+        <div class="deleteModalActions">
+          <ActionButton @click="closeModal">Annuler</ActionButton>
+          <ActionButton @click="handleDeletebot" :childclass="'deleteBotValidationButton'">Supprimer</ActionButton>
+        </div>
+      </template>
+    </Modal>
   </div>
 </template>
 
@@ -116,3 +176,29 @@ button {
 
 </style>
 
+<style v-slot:body>
+  .form {
+    width: 20rem;
+  }
+
+  input {
+    margin-bottom: 1rem;;
+  }
+
+  button {
+    padding: 0.5rem !important;
+  }
+
+  .deleteModalActions {
+    display: flex;
+    justify-content: space-between;
+    width: 20rem;
+  }
+
+  .deleteBotValidationButton {
+    background-color: #fc4848;
+    color: white;
+    border: none;
+    font-weight: bold;
+  }
+</style>

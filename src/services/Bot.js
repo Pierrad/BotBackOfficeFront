@@ -33,3 +33,27 @@ export const editEntries = async (id, entries) => {
     })
   }
 }
+
+export const addBot = async (name) => {
+  const authCookie = getCookie("authToken")
+  if (authCookie) {
+    return await callAPI(`/bot`, "POST", { name, entries: [] }).then((data) => {
+      if (data.success === true) {
+        location.reload()
+        return true
+      }
+    })
+  }
+}
+
+export const deleteBot = async (id) => {
+  const authCookie = getCookie("authToken")
+  if (authCookie) {
+    return await callAPI(`/bot/${id}`, "DELETE").then((data) => {
+      if (data.success === true) {
+        location.reload()
+        return true
+      }
+    })
+  }
+}
